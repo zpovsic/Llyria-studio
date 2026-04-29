@@ -1,14 +1,8 @@
 /**
- * Video Utilities
- *
- * This module handles the complex logic of rendering audio and cover art into a video file.
- * It uses the Web Audio API for spectrum analysis and the Canvas API for visual rendering.
- *
- * Use Cases:
- * - Exporting a generated song as a video file (WebM) for sharing on social media.
- * - Rendering dynamic audio spectrum visualizations.
- * - Overlaying synchronized lyrics on the video.
+ * Handles the complex logic of rendering audio and cover art into a video file.
+ * Uses the Web Audio API for spectrum analysis and the Canvas API for visual rendering.
  */
+
 import { SongResult } from '../../types';
 import { parseTimedLyrics } from './lyricsUtils';
 import { logFunctionCall } from './logger';

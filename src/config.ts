@@ -1,6 +1,6 @@
 /**
- * This file centralizes all configurable items for the Lyria Studio application.
- * It includes model identifiers for different generation tasks (music, text, image)
+ * Centralizes all configurable items for the Lyria Studio application.
+ * Includes model identifiers for different generation tasks (music, text, image)
  * and application-level flags.
  */
 

@@ -1,13 +1,8 @@
 /**
- * Lyrics Utilities
- *
- * This module provides functions for parsing and formatting song lyrics.
+ * Provides functions for parsing and formatting song lyrics.
  * It handles extracting timing markers and cleaning lyrics for display.
- *
- * Use Cases:
- * - Displaying clean lyrics without raw timestamp tags.
- * - Parsing timed lyrics for synchronized video rendering or karaoke-style displays.
  */
+
 import { logFunctionCall } from './logger';
 
 /**

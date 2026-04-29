@@ -1,10 +1,9 @@
 /**
- * Global Constants and Configuration Data
- * 
- * This file contains static data used throughout the Lyria Studio application,
+ * Contains static data used throughout the Lyria Studio application,
  * including configuration options for the Prompt Builder (moods, genres, themes),
  * a list of example songs for the gallery, and a collection of SVG icons as React components.
  */
+
 import React from 'react';
 import { ExampleSong } from './types';
 

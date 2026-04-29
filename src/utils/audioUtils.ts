@@ -1,11 +1,7 @@
 /**
- * Audio Utilities
- *
- * This module contains helper functions for processing and manipulating audio data.
- *
- * Use Cases:
- * - Converting base64 encoded audio strings received from APIs into playable Blob URLs.
+ * Contains functions for processing and manipulating audio data.
  */
+
 import { logFunctionCall } from './logger';
 
 /**

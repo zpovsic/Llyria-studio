@@ -1,14 +1,8 @@
 /**
- * GenAI Service
- *
- * This module encapsulates all interactions with the Google GenAI SDK.
- * It provides functions for generating song titles, cover art, and the actual audio tracks.
- *
- * Use Cases:
- * - Requesting a short, evocative title based on music prompts and lyrics.
- * - Generating square cover art images based on the song's atmosphere.
- * - Streaming audio generation from the Lyria models.
+ * Encapsulates all interactions with the Google GenAI SDK.
+ * Provides functions for generating song titles, cover art, and the actual audio tracks.
  */
+
 import { GoogleGenAI, Modality } from "@google/genai";
 import { CONFIG } from '../config';
 import { logFunctionCall, logGenAiCall } from '../utils/logger';

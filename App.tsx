@@ -1,18 +1,7 @@
 /**
- * Main Application Component for Lyria Studio
- *
- * This component serves as the primary container for the Lyria Studio application.
- * It manages the global state for music generation, including user inputs (prompts,
- * duration, lyrics options, image uploads), the generation process, and the display
- * of generated results.
- *
- * Key Features:
- * - Prompt building (manual or via the PromptBuilder helper)
- * - Image upload for visual prompting
- * - Integration with Google GenAI for audio generation
- * - Audio playback and video export functionality
- * - Display of generated lyrics and metadata (title, cover art)
+ * Main Application Component for Lyria 3 Studio
  */
+
 import React, { useState, useRef, useEffect } from "react";
 import { GoogleGenAI, Modality } from "@google/genai";
 import { Duration, LyricsOption, GenerationState, SongResult } from "./types";
