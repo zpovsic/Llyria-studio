@@ -247,6 +247,12 @@ const App: React.FC = () => {
     }));
   };
 
+  const removeResult = (id: string) => {
+    setGen((prev) => ({
+      results: prev.results.filter((r) => r.id !== id),
+    }));
+  };
+
   const addLog = (id: string, message: string) => {
     updateResult(id, (prev) => ({
       ...prev,
@@ -456,6 +462,10 @@ const App: React.FC = () => {
         error: err.message || "Synthesis interrupted.",
       }));
       addLog(newId, `Error: ${err.message}`);
+
+      if (err?.message === "Zero audio bits captured.") {
+        removeResult(newId);
+      }
     }
   };
 
