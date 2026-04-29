@@ -1,18 +1,23 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 
 interface AudioVisualizerProps {
   audioElementId: string;
   isPlaying: boolean;
 }
 
-export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ audioElementId, isPlaying }) => {
+export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
+  audioElementId,
+  isPlaying,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
-  const requestRef = useRef<number>();
+  const requestRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const audioElement = document.getElementById(audioElementId) as HTMLAudioElement;
+    const audioElement = document.getElementById(
+      audioElementId,
+    ) as HTMLAudioElement;
     if (!audioElement) return;
 
     // Attach audio context and analyser to the audio element to avoid recreating
@@ -21,7 +26,8 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ audioElementId
     let analyser = (audioElement as any)._analyser;
 
     if (!audioCtx) {
-      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      const AudioContext =
+        window.AudioContext || (window as any).webkitAudioContext;
       audioCtx = new AudioContext();
       analyser = audioCtx.createAnalyser();
       analyser.fftSize = 256;
@@ -46,15 +52,15 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ audioElementId
   }, [audioElementId]);
 
   useEffect(() => {
-    if (isPlaying && audioContextRef.current?.state === 'suspended') {
+    if (isPlaying && audioContextRef.current?.state === "suspended") {
       audioContextRef.current.resume();
     }
 
     const draw = () => {
       if (!canvasRef.current || !analyserRef.current) return;
-      
+
       const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
       // Handle resize
@@ -74,9 +80,14 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ audioElementId
       let x = 0;
 
       // Create gradient
-      const gradient = ctx.createLinearGradient(0, canvas.height, 0, canvas.height * 0.2);
-      gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // blue-500
-      gradient.addColorStop(1, 'rgba(147, 197, 253, 0)'); // blue-300 transparent
+      const gradient = ctx.createLinearGradient(
+        0,
+        canvas.height,
+        0,
+        canvas.height * 0.2,
+      );
+      gradient.addColorStop(0, "rgba(59, 130, 246, 0.4)"); // blue-500
+      gradient.addColorStop(1, "rgba(147, 197, 253, 0)"); // blue-300 transparent
 
       ctx.fillStyle = gradient;
 
@@ -86,8 +97,11 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ audioElementId
       for (let i = 0; i < bufferLength; i++) {
         // Smooth out the high frequencies which are usually lower amplitude
         const multiplier = 1 + (i / bufferLength) * 0.5;
-        const barHeight = Math.min((dataArray[i] / 255) * canvas.height * 0.8 * multiplier, canvas.height);
-        
+        const barHeight = Math.min(
+          (dataArray[i] / 255) * canvas.height * 0.8 * multiplier,
+          canvas.height,
+        );
+
         ctx.lineTo(x, canvas.height - barHeight);
         x += barWidth;
       }
@@ -101,8 +115,11 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ audioElementId
       x = 0;
       for (let i = 0; i < bufferLength; i++) {
         const multiplier = 1 + (i / bufferLength) * 0.5;
-        const barHeight = Math.min((dataArray[i] / 255) * canvas.height * 0.8 * multiplier, canvas.height);
-        
+        const barHeight = Math.min(
+          (dataArray[i] / 255) * canvas.height * 0.8 * multiplier,
+          canvas.height,
+        );
+
         if (i === 0) {
           ctx.moveTo(x, canvas.height - barHeight);
         } else {
@@ -110,7 +127,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ audioElementId
         }
         x += barWidth;
       }
-      ctx.strokeStyle = 'rgba(59, 130, 246, 0.5)';
+      ctx.strokeStyle = "rgba(59, 130, 246, 0.5)";
       ctx.lineWidth = 2;
       ctx.stroke();
 
@@ -127,9 +144,14 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ audioElementId
       }
       // Fade out when paused
       if (canvasRef.current) {
-        const ctx = canvasRef.current.getContext('2d');
+        const ctx = canvasRef.current.getContext("2d");
         if (ctx) {
-          ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+          ctx.clearRect(
+            0,
+            0,
+            canvasRef.current.width,
+            canvasRef.current.height,
+          );
         }
       }
     }
@@ -138,8 +160,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ audioElementId
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none z-10 opacity-70 transition-opacity duration-500"
-      style={{ opacity: isPlaying ? 0.7 : 0 }}
+      className={`absolute inset-0 w-full h-full pointer-events-none z-10 transition-opacity duration-500 ${isPlaying ? "opacity-70" : "opacity-0"}`}
     />
   );
 };

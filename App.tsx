@@ -560,6 +560,8 @@ const App: React.FC = () => {
                   onChange={handleImageUpload}
                   accept="image/*"
                   multiple
+                  title="Upload reference images"
+                  aria-label="Upload reference images"
                   className="hidden"
                 />
                 {isHelperOpen ? (
@@ -584,8 +586,7 @@ const App: React.FC = () => {
                       }}
                       onKeyDown={handleKeyDown}
                       placeholder="Atmospheric cinematic track with heavy sub-bass..."
-                      className="w-full min-h-[90px] bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 rounded-2xl p-4 pb-14 text-sm font-light leading-relaxed resize-none focus:bg-white dark:focus:bg-gray-800 transition-all pr-12 dark:text-gray-200 dark:placeholder-gray-500"
-                      style={{ overflow: "hidden" }}
+                      className="w-full min-h-[90px] overflow-hidden bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 rounded-2xl p-4 pb-14 text-sm font-light leading-relaxed resize-none focus:bg-white dark:focus:bg-gray-800 transition-all pr-12 dark:text-gray-200 dark:placeholder-gray-500"
                     />
                     <div className="absolute bottom-4 left-4 flex items-center gap-2">
                       <button
@@ -608,6 +609,7 @@ const App: React.FC = () => {
                                     behavior: "smooth",
                                   });
                               }}
+                              title="Scroll uploaded images left"
                               className="absolute left-0 z-10 -ml-3 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-md text-gray-500 hover:text-blue-600 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
                             >
                               <Icons.ChevronLeft className="w-3.5 h-3.5" />
@@ -624,10 +626,12 @@ const App: React.FC = () => {
                               >
                                 <img
                                   src={img.previewUrl}
+                                  alt={`Uploaded reference ${idx + 1}`}
                                   className="w-full h-full object-cover"
                                 />
                                 <button
                                   onClick={() => removeImage(idx)}
+                                  title={`Remove uploaded image ${idx + 1}`}
                                   className="absolute top-0 right-0 w-4 h-4 bg-black/50 text-white rounded-full flex items-center justify-center backdrop-blur hover:bg-black"
                                 >
                                   <Icons.X className="w-2.5 h-2.5" />
@@ -643,6 +647,7 @@ const App: React.FC = () => {
                                   .getElementById("main-image-carousel")
                                   ?.scrollBy({ left: 100, behavior: "smooth" });
                               }}
+                              title="Scroll uploaded images right"
                               className="absolute right-0 z-10 -mr-3 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-md text-gray-500 hover:text-blue-600 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
                             >
                               <Icons.ChevronRight className="w-3.5 h-3.5" />
@@ -757,16 +762,14 @@ const App: React.FC = () => {
                 <div
                   className={`relative transition-all duration-700 ease-in-out border shadow-lg rounded-[24px] ${isGenerating ? "generating-card border-blue-400/60 dark:border-blue-500/40" : "border-gray-200/60 dark:border-gray-700/60"} ${isExpanded ? "p-5 pb-8" : "p-3"}`}
                 >
-                  <div
-                    className="absolute inset-0 z-0 rounded-[24px] overflow-hidden"
-                    style={{
-                      backgroundImage: result.coverImageUrl
-                        ? `url(${result.coverImageUrl})`
-                        : "none",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
-                  >
+                  <div className="absolute inset-0 z-0 rounded-[24px] overflow-hidden">
+                    {result.coverImageUrl && (
+                      <img
+                        src={result.coverImageUrl}
+                        alt={`${result.title || "Generated song"} cover art background`}
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    )}
                     <div
                       className={`absolute inset-0 transition-opacity duration-700 ease-in-out backdrop-blur-2xl ${isExpanded ? "bg-white/75 dark:bg-gray-900/80 opacity-100" : "bg-white/85 dark:bg-gray-900/90 opacity-100"}`}
                     />
@@ -779,9 +782,8 @@ const App: React.FC = () => {
                   </div>
 
                   <div
-                    className={`relative z-[30] flex transition-all duration-700 ease-in-out gap-6 items-center ${isExpanded ? "flex-col md:flex-row mb-8" : "flex-row"}`}
+                    className={`relative z-[30] flex transition-all duration-700 ease-in-out gap-6 items-center ${isExpanded ? "flex-col md:flex-row mb-8 cursor-default" : "flex-row cursor-pointer"}`}
                     onClick={() => !isExpanded && toggleExpand(result.id)}
-                    style={{ cursor: isExpanded ? "default" : "pointer" }}
                   >
                     <div
                       className={`relative shrink-0 transition-all duration-700 ease-in-out rounded-3xl overflow-hidden shadow-2xl ${isExpanded ? "w-48 h-48 md:w-56 md:h-56" : "w-16 h-16"}`}
@@ -789,6 +791,7 @@ const App: React.FC = () => {
                       {result.coverImageUrl ? (
                         <img
                           src={result.coverImageUrl}
+                          alt={`${result.title || "Generated song"} cover art`}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -817,6 +820,13 @@ const App: React.FC = () => {
                         }}
                         disabled={
                           (!result.audioUrl && !isGenerating) || isEncoding
+                        }
+                        title={
+                          isGenerating
+                            ? "Generating audio"
+                            : isResultPlaying === result.id
+                              ? "Pause audio"
+                              : "Play audio"
                         }
                         className={`absolute inset-0 flex items-center justify-center text-white z-10 transition-opacity duration-300 ${isExpanded || isGenerating ? "opacity-100" : "opacity-0 group-hover:opacity-100"} ${isEncoding ? "cursor-wait" : "cursor-pointer"}`}
                       >
@@ -1030,6 +1040,11 @@ const App: React.FC = () => {
                           e.stopPropagation();
                           toggleExpand(result.id);
                         }}
+                        title={
+                          isExpanded
+                            ? "Collapse song details"
+                            : "Expand song details"
+                        }
                         className={`p-2 rounded-full transition-all duration-500 ${isExpanded ? "bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rotate-90" : "text-gray-400 dark:text-gray-500 group-hover:text-blue-500 dark:group-hover:text-blue-400"}`}
                       >
                         <Icons.ChevronRight className="w-6 h-6" />
